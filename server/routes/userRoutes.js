@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();//for modularization
 const bcrypt = require('bcrypt');
-const db = require('./databaseconnection');
+const db = require('../databaseconnection');
 
 // GET user by ID
 router.get('/get/:id', (req, res) => {
