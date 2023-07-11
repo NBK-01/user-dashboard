@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();//for modularization
 const bcrypt = require('bcrypt');
-const db = require('../databaseconnection');
+const db = require('./databaseconnection');
 
 // GET user by ID
 router.get('/get/:id', (req, res) => {
@@ -32,7 +32,7 @@ router.get('/get/:id', (req, res) => {
 router.post('/post', async (req, res) => {
     const { id, firstName, lastName, email, role, hashPass } = req.body; 
     const query = 'INSERT INTO userdb.userdbtbl SET ?'; 
-    //req.body is the middleware that we are using to extract the data from the body of the request
+  //req.body is the middleware that we are using to extract the data from the body of the request
   //middleware is a function that has access to the request and response object
   
   
