@@ -29,7 +29,7 @@ router.get('/get/:id', (req, res) => {
 });
 
 router.get('/getall', (req, res) => {
-  const query = 'SELECT * FROM userdb.userdbtbl'; 
+  const query = 'SELECT firstName, lastName, email, role FROM userdb.userdbtbl'; 
 
   db.query(query,[],(err,result)=> {
 
