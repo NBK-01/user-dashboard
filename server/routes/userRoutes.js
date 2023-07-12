@@ -28,6 +28,22 @@ router.get('/get/:id', (req, res) => {
     });
 });
 
+router.get('/getall', (req, res) => {
+  const query = 'SELECT * FROM userdb.userdbtbl'; 
+
+  db.query(query,[],(err,result)=> {
+
+    if(err){
+      console.error('error getting users:', err); 
+      return res.status(500).json({error: 'Failed to get users'});
+      }
+
+      const user = result;
+      res.json(user);
+
+  })
+})
+
 // POST create user
 router.post('/post', async (req, res) => {
     const { id, firstName, lastName, email, role, hashPass } = req.body; 
