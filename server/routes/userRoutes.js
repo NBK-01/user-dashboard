@@ -46,14 +46,14 @@ router.get('/getall', (req, res) => {
 
 // POST create user
 router.post('/post', async (req, res) => {
-    const { id, firstName, lastName, email, role, hashPass } = req.body; 
+    const {id, firstName, lastName, email, role, hashPass } = req.body; 
     const query = 'INSERT INTO userdb.userdbtbl SET ?'; 
   //req.body is the middleware that we are using to extract the data from the body of the request
   //middleware is a function that has access to the request and response object
   
   
     
-    if (!id || !firstName || !lastName || !email || !role || !hashPass) {
+    if (!firstName || !lastName || !email || !role || !hashPass) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
   
