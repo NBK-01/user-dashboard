@@ -46,7 +46,7 @@ router.get('/getall', (req, res) => {
 
 // POST create user
 router.post('/post', async (req, res) => {
-    const {id, firstName, lastName, email, role, hashPass } = req.body; 
+    const {firstName, lastName, email, role, hashPass } = req.body; 
     const query = 'INSERT INTO userdb.userdbtbl SET ?'; 
   //req.body is the middleware that we are using to extract the data from the body of the request
   //middleware is a function that has access to the request and response object
@@ -60,8 +60,7 @@ router.post('/post', async (req, res) => {
     try{
       hashedPassword =  await bcrypt.hash(req.body.hashPass, 10) ;
     
-    const newUser = {
-      id, 
+    const newUser = { 
       firstName,
       lastName,
       email,
