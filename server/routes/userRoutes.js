@@ -2,6 +2,15 @@ const express = require('express');
 const router = express.Router();//for modularization
 const bcrypt = require('bcrypt');
 const db = require('../databaseconnection');
+const passport = require('passport');
+const generateJwtToken = require('../controller/authentication');
+
+router.use(passport.initialize());
+
+router.use(passport.session());
+
+
+
 
 // GET user by ID
 router.get('/get/:id', (req, res) => {
@@ -38,15 +47,17 @@ router.get('/getall', (req, res) => {
       return res.status(500).json({error: 'Failed to get users'});
       }
 
-      const user = result;
-      res.json(user);
+      const users = result;
+      res.json(users);
 
   })
 })
 
 // POST create user
 router.post('/post', async (req, res) => {
+
     const {firstName, lastName, email, role, hashPass } = req.body; 
+
     const query = 'INSERT INTO userdb.userdbtbl SET ?'; 
   //req.body is the middleware that we are using to extract the data from the body of the request
   //middleware is a function that has access to the request and response object
@@ -86,15 +97,20 @@ router.post('/post', async (req, res) => {
 });
 
 // PUT update user by ID
-router.put('/put/:id', (req, res) => {
+router.put('/put/:id',passport.authenticate('jwt', { session: false }),  
+(req, res) => {
     const UserId = req.params.id;
+
     const { firstName, lastName, email, role } = req.body;
+
     const query = 'UPDATE userdbtbl SET firstName = ?, lastName = ?, email = ?, role = ? WHERE id = ?';
 
     db.query(query, [firstName, lastName, email, role, UserId], (err, results) => {
 
       if(err) {
+
           console.error('Error updating user:', err); 
+
           return res.status(err).json({error: 'Failed to update user'}); 
 
       }
@@ -104,18 +120,62 @@ router.put('/put/:id', (req, res) => {
     })
 });
 
+// PUT update admin status by ID
+router.put('/adminupdate/:id',passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+
+  const id = req.params.id;
+
+  const query = `UPDATE userdb.userdbtbl
+
+    SET isadmin = CASE
+
+      WHEN isadmin = 1 THEN 0
+
+      WHEN isadmin = 0 THEN 1
+
+      ELSE isadmin
+
+    END
+
+    WHERE id = ?;`;
+
+  db.query(query, [id], (err, result) => {
+
+    if (err) {
+
+      console.error('Error updating user:', err);
+
+      return res.status(500).json({ error: 'Failed to update user' });
+    }
+
+    if (result.affectedRows === 0) {
+
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ success: true });
+  });
+});
+
 // DELETE user by ID
-router.delete('/delete/:id', (req, res) => {
+router.delete('/delete/:id',passport.authenticate('jwt', { session: false }),
+ (req, res) => {
     const userId = req.params.id;
+
     const query = "DELETE FROM userdbtbl WHERE id = ?";
   
     db.query(query, [userId], (err, results) => {
+
       if (err) {
+
         console.error('Error deleting user:', err);
+
         return res.status(500).json({ error: 'Failed to delete user', message: err.message });
       }
   
       if (results.affectedRows === 0) {
+
         return res.status(404).json({ error: 'User not found' });
       }
   
@@ -123,4 +183,14 @@ router.delete('/delete/:id', (req, res) => {
     });
   });
 
+  router.post('/login', passport.authenticate('local', { session: false })
+  , (req, res) => 
+  {
+    const user = req.user;
+     // Assuming the authenticated user object is available in req.user
+    const token = generateJwtToken(user);
+
+    res.json({ token });
+  });
+  
 module.exports = router;
