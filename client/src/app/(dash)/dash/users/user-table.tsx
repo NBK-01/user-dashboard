@@ -2,10 +2,14 @@
 
 import {
   ColumnDef,
+  ColumnFiltersState,
+  SortingState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
-  getPaginationRowModel
 } from "@tanstack/react-table"
 
 import {
@@ -15,15 +19,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../components/ui/table"
+} from "../../../../components/ui/table"
 
 import {
   Button
-} from "../../../components/ui/button"
+} from "../../../../components/ui/button"
 
 import {
   Input
-} from "../../../components/ui/input"
+} from "../../../../components/ui/input"
+import React from "react"
+import { CreateUserModal } from "../../../../components/main/layout.components"
 
 
 
@@ -36,15 +42,36 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel()
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
   })
-
+  
   return (
     <>
+     <div className="flex items-center justify-between max-w-screen-2xl py-4">
+            <Input
+              placeholder="Filter emails..."
+              value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                table.getColumn("email")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+            <CreateUserModal/>
+      </div>
   <div className="rounded-md border">
       <Table>
         <TableHeader className="bg-slate-100">
@@ -89,7 +116,7 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-    <div className="flex items-center justify-end space-x-2 py-4">
+    <div className="flex items-center justify-end space-x-2 pt-6">
     <Button
       variant="outline"
       size="sm"

@@ -38,7 +38,11 @@ router.get('/get/:id', (req, res) => {
 });
 
 router.get('/getall', (req, res) => {
+<<<<<<< HEAD
   const query = 'SELECT firstName, lastName, email, role FROM userdb.userdbtbl'; 
+=======
+  const query = 'SELECT id, firstName, lastName, email, role FROM userdb.userdbtbl'; 
+>>>>>>> 5a92f74 (client-side test)
 
   db.query(query,[],(err,result)=> {
 
@@ -47,17 +51,29 @@ router.get('/getall', (req, res) => {
       return res.status(500).json({error: 'Failed to get users'});
       }
 
+<<<<<<< HEAD
       const users = result;
       res.json(users);
+=======
+      const user = result;
+      res.json(user);
+>>>>>>> 5a92f74 (client-side test)
 
   })
 })
 
+<<<<<<< HEAD
 // POST create user
 router.post('/post', async (req, res) => {
 
     const {firstName, lastName, email, role, hashPass } = req.body; 
 
+=======
+
+// POST create user
+router.post('/post', async (req, res) => {
+    const {firstName, lastName, email, role, hashPass } = req.body; 
+>>>>>>> 5a92f74 (client-side test)
     const query = 'INSERT INTO userdb.userdbtbl SET ?'; 
   //req.body is the middleware that we are using to extract the data from the body of the request
   //middleware is a function that has access to the request and response object
