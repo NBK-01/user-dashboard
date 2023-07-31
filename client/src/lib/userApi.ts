@@ -1,22 +1,47 @@
 import { IUser, ICreateUser, IEditUser } from "./userType";
 
 export const getAllUsers = async (): Promise<IUser[]> => {
-    const res = await fetch("http://localhost:3001/users/api/getall")
+    const res = await fetch("http://localhost:3000/users/me", {
+        headers: {
+            //Authorization jwt token here
+        },
+    })
     const users = await res.json()
+    console.log(users)
     return users
+    
 }
 
 export const createUser = async (user: ICreateUser): Promise<ICreateUser> => {
-    const res = await fetch("http://localhost:3001/users/api/post", {
+    const res = await fetch("http://localhost:3000/auth/signup", {
         method: "POST",
         headers: {
-            'Content-Type': "application/json"
+            'Content-Type': "application/json",
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
     })
 
     const newUser = res.json()
+    console.log(newUser)
     return newUser
+
+}
+
+export const signIn = async (user: ICreateUser): Promise<ICreateUser> => {
+    const res = await fetch("http://localhost:3000/auth/signin", {
+        method: "POST",
+        headers: {
+            'Content-Type': "application/json",
+            // 'Access-Control-Allow-Origin': "*",
+            // 'Access-Control-Allow-Methods': "GET, POST, PUT, DELETE, OPTIONS",
+            // 'Access-Control-Allow-Headers': "Content-Type, Authorization",
+        },
+        body: JSON.stringify(user),
+    })
+
+    const token = res.json()
+    console.log(token)
+    return token
 
 }
 

@@ -40,19 +40,40 @@ import {
 
 
 export function LoginForm() {
+  const [emailVal, setEmailVal] = useState('')
+  const [passwordVal, setPasswordVal] = useState('')
+  const [idVal, setIdVal] = useState('')
+  const { toast } = useToast()
+
+  const router = useRouter()
+
+  const handleSignIn: React.FormEventHandler<HTMLFormElement> = async (e) => {
+      e.preventDefault()
+      await createUser({
+        email: emailVal,
+        password: passwordVal,
+      })
+    router.refresh()
+    toast({
+      title: "Success",
+      description: `User ${emailVal} signedIn`,
+    })
+
+     
+  }
   return (
     <>
     <Card className="">
       <CardContent>
-        <form className="px-8 py-14">
+        <form onSubmit={handleSignIn} className="px-8 py-14">
           <div>
             <div className="flex flex-col space-y-1.5 mb-8 md:w-[280px]">
               <Label htmlFor="email"> Email </Label>
-              <Input id="email" placeholder="johndoe@techgenies.com" />
+              <Input id="email" value={emailVal} onChange={e => setEmailVal(e.target.value)} />
             </div>
             <div className="flex flex-col space-y-1.5 md:w-[280px]">
               <Label htmlFor="name"> Password </Label>
-              <Input id="password" type="password" placeholder="*******" />
+              <Input id="password" type="password" value={passwordVal} onChange={e => setPasswordVal(e.target.value)} placeholder="*******" />
             </div>
           </div>
           <Button className="mt-5">Submit</Button>
@@ -69,31 +90,48 @@ export function LoginForm() {
 }
 
 export function SignUpForm() {
+  const [firstNameVal, setFirstNameVal] = useState('')
+  const [lastNameVal, setLastNameVal] = useState('')
+  const [emailVal, setEmailVal] = useState('')
+  const [passwordVal, setPasswordVal] = useState('')
+  const [idVal, setIdVal] = useState('')
+  const { toast } = useToast()
+
+  const router = useRouter()
+
+  const handleCreateUser: React.FormEventHandler<HTMLFormElement> = async (e) => {
+      e.preventDefault()
+      await createUser({
+        email: emailVal,
+        password: passwordVal,
+      })
+    router.refresh()
+    toast({
+      title: "Success",
+      description: `User ${emailVal} created`,
+    })
+
+     
+  }
+
     return (
       <>
       <Card className="">
         <CardContent>
-          <form className="px-8 py-10">
+          <form onSubmit={handleCreateUser} className="px-8 py-10">
             <div>
-            <div className="flex flex-col space-y-1.5 mb-8 md:w-[280px]">
-                <Label htmlFor="name"> Username </Label>
-                <Input id="name" placeholder="JohnDoe123" />
-              </div>
+          
               <div className="flex flex-col space-y-1.5 mb-8 md:w-[280px]">
                 <Label htmlFor="email"> Email </Label>
-                <Input id="email" placeholder="johndoe@techgenies.com" />
+                <Input id="email" value={emailVal} onChange={e => setEmailVal(e.target.value)} />
               </div>
               <div className="flex flex-col mb-8 space-y-1.5 md:w-[280px]">
                 <Label htmlFor="name"> Password </Label>
-                <Input id="password" type="password" placeholder="*******" />
-              </div>
-              <div className="flex flex-col space-y-1.5 md:w-[280px]">
-                <Label htmlFor="name">Confirm Password </Label>
-                <Input id="password" type="password" placeholder="*******" />
+                <Input id="password" type="password" value={passwordVal} onChange={e => setPasswordVal(e.target.value)} placeholder="*******" />
               </div>
             </div>
             <div className='flex flex-col'>
-                <Button className="w-full mt-8">Submit</Button>
+                <Button className="w-full mt-8" type="submit">Submit</Button>
                 <span className="text-slate-500 text-sm mx-auto mt-5"> Already have an account? <Link className="text-accent" href="/signin"> Sign-in </Link> </span>
             </div>
           </form>
@@ -118,29 +156,29 @@ export function CreateUser() {
 
   const router = useRouter()
 
-  const handleCreateUser: React.FormEventHandler<HTMLFormElement> = async (e) => {
-      e.preventDefault()
-      console.log(firstNameVal)
-      console.log(lastNameVal)
-      console.log(emailVal)
-      await createUser({
-        firstName: firstNameVal,
-        lastName: lastNameVal,
-        email: emailVal,
-        hashPass: "BlahBlah",
-        role: "Admin",
-      })
-    router.refresh()
-    toast({
-      title: "Success",
-      description: `User ${firstNameVal} ${lastNameVal} created`,
-    })
+  // const handleCreateUser: React.FormEventHandler<HTMLFormElement> = async (e) => {
+  //     e.preventDefault()
+  //     console.log(firstNameVal)
+  //     console.log(lastNameVal)
+  //     console.log(emailVal)
+  //     await createUser({
+  //       firstName: firstNameVal,
+  //       lastName: lastNameVal,
+  //       email: emailVal,
+  //       hashPass: "BlahBlah",
+  //       role: "Admin",
+  //     })
+  //   router.refresh()
+  //   toast({
+  //     title: "Success",
+  //     description: `User ${firstNameVal} ${lastNameVal} created`,
+  //   })
 
      
-  }
+  // }
 
   return (
-    <form onSubmit={handleCreateUser} className="px-8 py-10">
+    <form  className="px-8 py-10">
             <div>
               <div className="flex flex-col space-y-1.5 mb-8 md:w-[280px]">
                 <Label htmlFor="firstName"> First Name </Label>
